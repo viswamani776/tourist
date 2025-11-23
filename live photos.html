@@ -1,0 +1,65 @@
+<script>
+const apiKey = "0ffa5603d9653fc51bc64ed34e845ee1";
+
+// District name on card  →  City name used in API
+const districtMap = {
+    "ARIYALUR": "Ariyalur",
+    "CHENNAI": "Chennai",
+    "COIMBATORE": "Coimbatore",
+    "CUDDALORE": "Cuddalore",
+    "DHARMAPURI": "Dharmapuri",
+    "DINDIGUL": "Dindigul",
+    "ERODE": "Erode",
+    "KALLAKURICHI": "Kallakurichi",
+    "KANCHIPURAM": "Kanchipuram",
+    "KANYAKUMARI": "Nagercoil",
+    "KARUR": "Karur",
+    "KRISHNAGIRI": "Krishnagiri",
+    "MADURAI": "Madurai",
+    "MAYILADUTHURAI": "Mayiladuthurai",
+    "NAGAPATTINAM": "Nagapattinam",
+    "NAMAKKAL": "Namakkal",
+    "NILGIRIS": "Udhagamandalam",
+    "PERAMBALUR": "Perambalur",
+    "PUDUKKOTTAI": "Pudukkottai",
+    "RAMANATHAPURAM": "Ramanathapuram",
+    "RANIPET": "Ranipet",
+    "SALEM": "Salem",
+    "SIVAGANGAI": "Sivaganga",
+    "TENKASI": "Tenkasi",
+    "THANJAVUR": "Thanjavur",
+    "THENI": "Theni",
+    "THIRUPATTUR": "Tirupattur",
+    "THIRUVALLUR": "Tiruvallur",
+    "TIRUNELVELI": "Tirunelveli",
+    "TIRUPPUR": "Tiruppur",
+    "TIRUVANNAMALAI": "Tiruvannamalai",
+    "TRICHY": "Tiruchirappalli",
+    "TUTICORIN": "Thoothukudi",
+    "VELLORE": "Vellore",
+    "VILLUPURAM": "Villupuram",
+    "VIRUDHUNAGAR": "Virudhunagar"
+};
+
+window.onload = function () {
+    Object.keys(districtMap).forEach(district => {
+        const apiCity = districtMap[district];
+        const tempSpan = document.getElementById(`temp-${district}`);
+
+        if (tempSpan) {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${apiCity}&appid=${apiKey}&units=metric`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.main) {
+                        tempSpan.innerText = `${data.main.temp}°C`;
+                    } else {
+                        tempSpan.innerText = "Not Found";
+                    }
+                })
+                .catch(() => {
+                    tempSpan.innerText = "Error";
+                });
+        }
+    });
+};
+</script>

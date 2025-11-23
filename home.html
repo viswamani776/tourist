@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Explore Tamil Nadu - Tourism Platform</title>
+<style>
+  /* ====== GLOBAL ====== */
+  :root{
+    --bg:#0f1724;
+    --card-bg: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    --accent: #00e5ff;
+    --muted: #cbd5e1;
+    --glass-border: rgba(255,255,255,0.06);
+    --info-bg: #0b1220;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Poppins", "Noto Sans", sans-serif;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(10,30,60,0.45), transparent),
+                radial-gradient(900px 400px at 90% 90%, rgba(30,10,60,0.35), transparent),
+                #071226;
+    color:var(--muted);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* ====== HEADER ====== */
+  header{
+    position:sticky;
+    top:0;
+    z-index:80;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:12px 20px;
+    background: linear-gradient(180deg, rgba(8,18,30,0.85), rgba(8,16,26,0.75));
+    border-bottom:1px solid rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+  }
+  .brand h1{
+    margin:0;
+    font-size:18px;
+    letter-spacing:0.2px;
+    font-weight:700;
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  nav a{
+    color:var(--muted);
+    text-decoration:none;
+    font-size:15px;
+    padding:8px 10px;
+    border-radius:8px;
+    transition:all .18s ease;
+  }
+  nav a:hover{ color:#fff; background:rgba(255,255,255,0.03); transform:translateY(-2px) }
+
+  /* language select */
+  #language{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,0.04);
+    padding:8px 10px;
+    border-radius:8px;
+    font-size:14px;
+    outline:none;
+    -webkit-appearance:none;
+    appearance:none;
+    cursor:pointer;
+  }
+
+  /* ====== HERO VIDEO ====== */
+  .hero-video{
+    position:relative;
+    height:76vh;
+    min-height:480px;
+    overflow:hidden;
+    display:block;
+  }
+  .hero-video video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:contrast(1.02) saturate(1.05) brightness(0.8);
+    transform:scale(1.05);
+  }
+  .overlay{
+    position:absolute;
+    inset:0;
+    background: linear-gradient(180deg, rgba(3,8,18,0.3), rgba(3,8,18,0.6));
+    z-index:1;
+  }
+  .hero-content{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:32px;
+    flex-direction:column;
+    gap:18px;
+    color:#e6f7ff;
+  }
+  .hero-title{
+    font-size: clamp(28px, 4.2vw, 44px);
+    margin:0;
+    line-height:1.02;
+    font-weight:800;
+    letter-spacing:-0.6px;
+    text-shadow: 0 12px 30px rgba(0,0,0,0.7);
+  }
+  .hero-sub{
+    max-width:980px;
+    color:rgba(230,247,255,0.9);
+    font-size:clamp(14px,1.6vw,18px);
+    margin:0;
+    opacity:0.95;
+  }
+
+  /* ====== FEATURE CARDS WRAP ====== */
+  .features-cards{
+    margin-top:24px;
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:6px 10px;
+  }
+
+  /* ====== 3D FLOATING CARD ====== */
+  .feature-card{
+    width:240px;
+    height:130px;
+    border-radius:16px;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    gap:8px;
+    background:var(--card-bg);
+    border:1px solid var(--glass-border);
+    box-shadow: 0 6px 18px rgba(2,6,18,0.6), /* depth */
+                0 2px 8px rgba(0,0,0,0.5);
+    transform-style:preserve-3d;
+    transition: transform 350ms cubic-bezier(.15,.9,.26,1), box-shadow 350ms;
+    cursor:pointer;
+    color: #eafcff;
+    position:relative;
+    overflow:visible;
+    perspective:1000px;
+  }
+
+  /* small accent element for premium look */
+  .feature-card::before{
+    content:"";
+    position:absolute;
+    right:-40px;
+    top:-40px;
+    width:120px;height:120px;
+    background:radial-gradient(circle at 30% 30%, rgba(0,229,255,0.08), transparent 40%),
+               radial-gradient(circle at 70% 70%, rgba(0,120,255,0.04), transparent 35%);
+    filter:blur(18px);
+    transform:translateZ(-30px);
+    pointer-events:none;
+  }
+
+  .feature-title{
+    font-weight:700;
+    font-size:16px;
+    transform:translateZ(32px);
+    text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  }
+  .feature-desc{
+    font-size:13px;
+    color:rgba(230,247,255,0.85);
+    transform:translateZ(24px);
+  }
+
+  /* glow rim when active/hover */
+  .feature-card.hovered{
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.6),
+      0 8px 40px rgba(0,78,119,0.14),
+      0 0 24px rgba(0,229,255,0.07);
+    border-color: rgba(0,229,255,0.22);
+  }
+
+  /* shine sweep */
+  .feature-card .shine {
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:linear-gradient(120deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01) 30%, rgba(255,255,255,0.01) 70%, rgba(255,255,255,0.03));
+    transform:translateX(-120%) rotate(6deg);
+    transition:transform 600ms cubic-bezier(.2,.9,.3,1);
+    border-radius:16px;
+  }
+  .feature-card.hovered .shine{
+    transform:translateX(20%) rotate(6deg);
+  }
+
+  /* ====== INFO SECTION ====== */
+  .info {
+    padding:48px 20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
+  }
+  .info .container{
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:22px;
+  }
+  .info-head{
+    text-align:center;
+    color:#cfefff;
+    font-weight:800;
+    font-size:28px;
+  }
+  .info-grid{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap:18px;
+  }
+
+  .info-card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:18px;
+    border:1px solid rgba(255,255,255,0.03);
+    color:var(--muted);
+    box-shadow: 0 6px 18px rgba(1,6,12,0.6);
+  }
+  .info-card h3{ margin:0 0 8px 0; color:#d7f7ff; font-size:16px }
+  .info-card p{ margin:0; font-size:14px; color:rgba(210,240,255,0.9) }
+
+  /* small screens */
+  @media (max-width:900px){
+    .feature-card{ width:46%; min-width:200px }
+  }
+  @media (max-width:600px){
+    .feature-card{ width:90% }
+    header{ flex-direction:column; gap:10px; align-items:flex-start }
+  }
+
+
+
+
+
+/* PREMIUM 3D FLOATING INFO CARDS */
+.info-card {
+    width: 260px;
+    background: #ffffff; /* Keep white background for readability */
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    cursor: pointer;
+    perspective: 1000px;
+    color: #333; /* Dark text for readability */
+}
+
+/* CARD HEADING */
+.info-card h3 {
+    font-size: 20px;
+    color: #0a3d62;
+    margin-bottom: 10px;
+}
+
+/* CARD PARAGRAPH */
+.info-card p {
+    font-size: 15px;
+    color: #555; /* Darker gray for visibility */
+}
+
+/* HOVER EFFECT */
+.info-card:hover {
+    transform: rotateX(5deg) rotateY(5deg) translateY(-12px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3),
+                0 0 15px rgba(0, 200, 255, 0.2);
+    background: #f0f8ff; /* subtle background on hover to highlight text */
+}
+
+
+/* PREMIUM ABOUT US CARDS */
+#about-us .info-card {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    cursor: pointer;
+    color: #333;
+}
+
+#about-us .info-card h3 {
+    font-size: 20px;
+    color: #0a3d62;
+    margin-bottom: 12px;
+}
+
+#about-us .info-card p {
+    font-size: 15px;
+    color: #555;
+}
+
+/* PREMIUM ABOUT US SECTION */
+.about-premium {
+    padding: 80px 20px;
+    background: linear-gradient(to right, #f0f8ff, #e0f7fa);
+    color: #0a3d62;
+    text-align: center;
+}
+
+.about-premium .about-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.about-premium h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+
+.about-premium p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    color: #0a3d62;
+    background: rgba(255,255,255,0.2);
+    padding: 15px 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for paragraphs */
+.about-premium p:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.3);
+}
+
+
+
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand" aria-hidden="false">
+      <svg width="36" height="36" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="44" height="44" rx="10" fill="#001a26"></rect>
+        <path d="M12 30c6-6 18-6 24 0" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+      <h1 id="siteTitle">Explore Tamil Nadu</h1>
+    </div>
+
+    <nav aria-label="Main navigation">
+      <a id="navHome" href="home.html">Home</a>
+      <a id="navPlaces" href="places.html">Places</a>
+      <a id="navLive" href="live photos.html">Live Photos</a>
+
+      <select id="language" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+        <option value="hi">हिन्दी</option>
+        <option value="te">తెలుగు</option>
+        <option value="ml">മലയാളം</option>
+      </select>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero-video" id="home" aria-label="Hero">
+    <video autoplay muted loop playsinline>
+      <!-- replace the src with your video file -->
+      <source src="6006682-hd_1920_1080_30fps (1).mp4" type="video/mp4">
+      <!-- fallback poster -->
+    </video>
+    <div class="overlay"></div>
+
+    <div class="hero-content" role="region" aria-labelledby="heroTitle">
+      <h2 id="heroTitle" class="hero-title">Welcome to Explore Tamil Nadu</h2>
+      <p id="heroSub" class="hero-sub">Your complete travel guide for places, hotels, food, weather and more.</p>
+
+      <div class="features-cards" role="list" aria-label="Key features">
+        <div class="feature-card" data-key="places" role="listitem" tabindex="0">
+          <div class="shine"></div>
+          <div class="feature-title" data-key-title>🌍 Places</div>
+          <div class="feature-desc" data-key-desc>Select any district and see all important places.</div>
+        </div>
+
+        <div class="feature-card" data-key="weather" role="listitem" tabindex="0">
+          <div class="shine"></div>
+          <div class="feature-title" data-key-title>🌡 Live Temperature</div>
+          <div class="feature-desc" data-key-desc>Check real-time weather before you travel.</div>
+        </div>
+
+        <div class="feature-card" data-key="hidden" role="listitem" tabindex="0">
+          <div class="shine"></div>
+          <div class="feature-title" data-key-title>🌄 Hidden Places</div>
+          <div class="feature-desc" data-key-desc>Discover unknown and less explored spots.</div>
+        </div>
+
+        <div class="feature-card" data-key="hotels" role="listitem" tabindex="0">
+          <div class="shine"></div>
+          <div class="feature-title" data-key-title>🏨 Hotels</div>
+          <div class="feature-desc" data-key-desc>Luxury and budget friendly hotel details.</div>
+        </div>
+
+        <div class="feature-card" data-key="food" role="listitem" tabindex="0">
+          <div class="shine"></div>
+          <div class="feature-title" data-key-title>🍛 Food Shops</div>
+          <div class="feature-desc" data-key-desc>Find good restaurants and local foods.</div>
+        </div>
+
+        <div class="feature-card" data-key="travels" role="listitem" tabindex="0">
+          <div class="shine"></div>
+          <div class="feature-title" data-key-title>🛺 Travels</div>
+          <div class="feature-desc" data-key-desc>Travel services, cabs, bus and rental vehicles.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEME / INFO -->
+  <section class="info" id="theme" aria-labelledby="themeHeading">
+    <div class="container">
+      <h3 id="themeHeading" class="info-head">Website Theme</h3>
+
+      <div class="info-grid" role="list">
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="district">District Selection</h3>
+          <p data-info-desc="district">Choose any district to explore places, food and hotels easily.</p>
+        </div>
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="liveweather">Live Weather</h3>
+          <p data-info-desc="liveweather">Instant temperature updates for all locations.</p>
+        </div>
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="hidden">Hidden Spots</h3>
+          <p data-info-desc="hidden">Shows hidden waterfalls, hills, peaceful tourist spots.</p>
+        </div>
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="hotels">Hotels</h3>
+          <p data-info-desc="hotels">Luxury hotels, resorts, and budget rooms in one place.</p>
+        </div>
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="food">Food Shops</h3>
+          <p data-info-desc="food">Street foods, restaurants, and special dishes.</p>
+        </div>
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="travels">Travels</h3>
+          <p data-info-desc="travels">Taxi, cab, car rental, and bus services information.</p>
+        </div>
+
+        <div class="info-card" role="listitem">
+          <h3 data-info-title="language">Multi Language</h3>
+          <p data-info-desc="language">Website available in different languages.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+<!-- ABOUT US SECTION -->
+<section id="about-us" class="about-premium">
+    <div class="about-container">
+        <h2>About Us</h2>
+        <p>
+            Explore Tamil Nadu is your ultimate travel guide to discovering beautiful destinations, hidden spots, and luxurious or budget-friendly hotels.  
+            We provide live weather updates, curated food recommendations, and reliable travel services to make your trip seamless and memorable.
+        </p>
+        <p>
+            Our mission is to help travelers explore the rich culture, scenic landscapes, and unique experiences Tamil Nadu has to offer.  
+            Whether you are looking for hidden waterfalls, historic sites, street food, or comfortable stays, we have it all in one platform.
+        </p>
+        <p>
+            Experience immersive visuals, real-time information, and multilingual support — all designed to make your journey easier and more enjoyable.
+        </p>
+    </div>
+</section>
+
+
+
+<script>
+/* ====== 3D TILT / FLOAT EFFECT ====== */
+(function(){
+  const cards = document.querySelectorAll('.feature-card');
+
+  cards.forEach(card => {
+    let rect = null;
+    let w,h,cx,cy;
+    const strength = 15; // rotation strength
+    const translateZ = 18;
+
+    function updateRect(){ rect = card.getBoundingClientRect(); w = rect.width; h = rect.height; cx = rect.left + w/2; cy = rect.top + h/2; }
+
+    function handleMove(e){
+      if(!rect) updateRect();
+      const clientX = e.clientX ?? (e.touches && e.touches[0] && e.touches[0].clientX) ?? cx;
+      const clientY = e.clientY ?? (e.touches && e.touches[0] && e.touches[0].clientY) ?? cy;
+      const dx = clientX - cx;
+      const dy = clientY - cy;
+      const rx = (dy / (h/2)) * strength; // rotateX
+      const ry = -(dx / (w/2)) * strength; // rotateY
+
+      const transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(${translateZ}px) scale(1.02)`;
+      card.style.transform = transform;
+      card.classList.add('hovered');
+    }
+
+    function handleLeave(){
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)`;
+      card.classList.remove('hovered');
+    }
+
+    // desktop mouse
+    card.addEventListener('mousemove', handleMove);
+    card.addEventListener('mouseleave', handleLeave);
+    card.addEventListener('mouseenter', updateRect);
+
+    // touch support: simple press/drag
+    card.addEventListener('touchstart', (e)=>{ updateRect(); handleMove(e); }, {passive:true});
+    card.addEventListener('touchmove', (e)=>{ handleMove(e); }, {passive:true});
+    card.addEventListener('touchend', handleLeave);
+  });
+})();
+
+/* ====== LANGUAGE DATA ====== 
+   Each key maps to translations for: nav, hero, features, info
+*/
+const LANG = {
+  en: {
+    siteTitle: "Explore Tamil Nadu",
+    navHome: "Home", navPlaces:"Places", navLive:"Live Photos",
+    heroTitle:"Welcome to Explore Tamil Nadu",
+    heroSub:"Your complete travel guide for places, hotels, food, weather and more.",
+    features: {
+      places: {t:"🌍 Places", d:"Select any district and see all important places."},
+      weather:{t:"🌡 Live Temperature", d:"Check real-time weather before you travel."},
+      hidden:{t:"🌄 Hidden Places", d:"Discover unknown and less explored spots."},
+      hotels:{t:"🏨 Hotels", d:"Luxury and budget friendly hotel details."},
+      food:{t:"🍛 Food Shops", d:"Find good restaurants and local foods."},
+      travels:{t:"🛺 Travels", d:"Travel services, cabs, bus and rental vehicles."}
+    },
+    themeTitle:"Website Theme",
+    info:{
+      district:{t:"District Selection", d:"Choose any district to explore places, food and hotels easily."},
+      liveweather:{t:"Live Weather", d:"Instant temperature updates for all locations."},
+      hidden:{t:"Hidden Spots", d:"Shows hidden waterfalls, hills, peaceful tourist spots."},
+      hotels:{t:"Hotels", d:"Luxury hotels, resorts, and budget rooms in one place."},
+      food:{t:"Food Shops", d:"Street foods, restaurants, and special dishes."},
+      travels:{t:"Travels", d:"Taxi, cab, car rental, and bus services information."},
+      language:{t:"Multi Language", d:"Website available in different languages."}
+    }
+  },
+
+  ta: {
+    siteTitle: "தமிழ்நாட்டைப் பந்தியுங்கள்",
+    navHome: "முகப்பு", navPlaces:"இடங்கள்", navLive:"நேரடி படங்கள்",
+    heroTitle:"தமிழ்நாட்டை ஆராய வரவேற்கிறோம்",
+    heroSub:"இடங்கள், ஹோட்டல்கள், உணவு, வானிலை மற்றும் மேலும் அனைத்திற்கும் உங்கள் பயண வழிகாட்டி.",
+    features:{
+      places:{t:"🌍 இடங்கள்", d:"ஒரு மாவட்டத்தைத் தேர்ந்தெடுத்து அனைத்து முக்கிய இடங்களையும் காணுங்கள்."},
+      weather:{t:"🌡 நேரடி வெப்பநிலை", d:"பயணிக்கும்முன் நேரடி வானிலைதை சரிபார்க்கவும்."},
+      hidden:{t:"🌄 மறைந்த இடங்கள்", d:"குறிப்பீடு செய்யப்படாத மற்றும் சோம்பல் இடங்களை கண்டறியுங்கள்."},
+      hotels:{t:"🏨 ஹோட்டல்கள்", d:"இறுதி மற்றும் பட்ஜெட் ஹோட்டல்கள் பற்றிய விவரம்."},
+      food:{t:"🍛 உணவகம்", d:"நல்ல உணவகங்கள் மற்றும் உள்ளூர் உணவுகளை கண்டுபிடிக்கவும்."},
+      travels:{t:"🛺 பயணங்கள்", d:"ஒருங்கோட்ட போக்குவரத்து, கேப் மற்றும் வாடகை வாகன சேவைகள்."}
+    },
+    themeTitle:"இணையத்தளத்தின் தீம்",
+    info:{
+      district:{t:"மாவட்டத் தேர்வு", d:"இடங்கள், உணவு மற்றும் ஹோட்டல்களை எளிதாக ஆராய ஒரு மாவட்டத்தை தேர்வு செய்க."},
+      liveweather:{t:"நேரடி வானிலை", d:"அனைத்து இடங்களுக்குமான உடனடி வெப்பநிலை திருத்தங்கள்."},
+      hidden:{t:"மறைந்த இடங்கள்", d:"மறைபிடிக்கப்பட்ட அருவிகள், மலைகள் மற்றும் அமைதியான சுற்றுலா இடங்களை காட்டுகிறது."},
+      hotels:{t:"ஹோட்டல்கள்", d:"பிர تیم் ஹோட்டல்கள், விடுதிகள் மற்றும் பட்ஜெட் அறைகள்."},
+      food:{t:"உணவகம்", d:"தெரு உணவுகள், உணவகங்கள் மற்றும் சிறப்பு உணவுகள்."},
+      travels:{t:"பயணங்கள்", d:"டாக்சி, காப், கார் வாடகை மற்றும் பேருந்து சேவைகள் தகவல்."},
+      language:{t:"பல மொழிகள்", d:"வேதிகை பல மொழிகளில் ஆனது."}
+    }
+  },
+
+  hi: {
+    siteTitle: "तमिल नाडु देखें",
+    navHome: "होम", navPlaces:"स्थान", navLive:"लाइव फ़ोटो",
+    heroTitle:"तमिलनाडु में आपका स्वागत है",
+    heroSub:"स्थान, होटल, भोजन, मौसम और अधिक के लिए आपका संपूर्ण यात्रा गाइड।",
+    features:{
+      places:{t:"🌍 स्थान", d:"किसी भी जिले का चयन करें और सभी महत्वपूर्ण स्थान देखें।"},
+      weather:{t:"🌡 लाइव तापमान", d:"यात्रा से पहले वास्तविक समय मौसम देखें।"},
+      hidden:{t:"🌄 छिपे हुए स्थान", d:"अज्ञात और कम खोजे गए स्थानों की खोज करें।"},
+      hotels:{t:"🏨 होटल", d:"लक्सरी और बजट फ्रेंडली होटल जानकारी।"},
+      food:{t:"🍛 खाने की दुकानें", d:"अच्छे रेस्टोरेंट और स्थानीय व्यंजन खोजें।"},
+      travels:{t:"🛺 यात्रा", d:"काब, बस और रेंटल वाहन सेवाएँ।"}
+    },
+    themeTitle:"वेबसाइट थीम",
+    info:{
+      district:{t:"जिला चयन", d:"स्थान, भोजन और होटल खोजने के लिए कोई जिला चुनें।"},
+      liveweather:{t:"लाइव मौसम", d:"सभी स्थानों के लिए तात्कालिक तापमान अपडेट।"},
+      hidden:{t:"छिपे हुए स्थान", d:"छुपे हुए जलप्रपात, पहाड़ और शांत स्थल दिखाता है।"},
+      hotels:{t:"होटल", d:"लक्ज़री होटल, रिसॉर्ट्स और बजट कमरे।"},
+      food:{t:"खाने की दुकानें", d:"स्ट्रिट फूड, रेस्टोरेंट और विशेष व्यंजन।"},
+      travels:{t:"यात्रा", d:"टैक्सी, कार रेंटल और बस सेवाएँ।"},
+      language:{t:"बहु-भाषा", d:"वेबसाइट विभिन्न भाषाओं में उपलब्ध।"}
+    }
+  },
+
+  te: {
+    siteTitle: "తమిళనాడు మంత్రి",
+    navHome: "హోమ్", navPlaces:"స్థలాలు", navLive:"లైవ్ ఫోటోలు",
+    heroTitle:"తమిళనాడీకి స్వాగతం",
+    heroSub:"స్థలాలు, హోటల్స్, ఆహారం, వాతావరణం మరియు మరిన్ని కోసం పూర్తి ప్రయాణ మార్గదర్శి.",
+    features:{
+      places:{t:"🌍 స్థలాలు", d:"ఏ జిల్లాను ఎంచుకొని ముఖ్యమైన అన్ని స్థలాలను చూడండి."},
+      weather:{t:"🌡 ప్రత్యక్ష ఉష్ణోగ్రత", d:"ప్రయాణానికి ముందే ప్రత్యక్ష వాతావరణాన్ని తనిఖీ చేయండి."},
+      hidden:{t:"🌄 రహస్య స్థలాలు", d:"అపరిచిత మరియు తక్కువగా అన్వేషించిన చోటులను కనుగొనండి."},
+      hotels:{t:"🏨 హోటల్స్", d:"లగ్జరీ మరియు బడ్జెట్ హోటల్స్ వివరాలు."},
+      food:{t:"🍛 ఆహార స్థలాలు", d:"చక్కటి రెస్టారెంట్లు మరియు స్థానిక ఆహారాలు కనుగొనండి."},
+      travels:{t:"🛺 ప్రయాణాలు", d:"క్యాబ్, బస్ మరియు రెంటల్ వాహన సేవలు."}
+    },
+    themeTitle:"వెబ్సైట్ థీమ్",
+    info:{
+      district:{t:"జిల్లా ఎంపిక", d:"స్థలాలు, ఆహారం మరియు హోటల్స్ అన్వేషించడానికి జిల్లా ఎన్నుకోండి."},
+      liveweather:{t:"ప్రత్యక్ష వాతావరణం", d:"అన్ని స్థానాలకు తక్షణ ఉష్ణోగ్రత అప్‌డేట్స్."},
+      hidden:{t:"రహస్య స్థలాలు", d:"రഹస్య జలపాతాలు, కొండలు మరియు శాంతి ప్రదేశాలను చూపిస్తుంది."},
+      hotels:{t:"హోటల్స్", d:"లగ్జరీ హోటల్స్, రిసార్ట్‌లు మరియు బడ్జెట్ గదులు."},
+      food:{t:"ఆహారం", d:"స్ట్రీట్ ఫుడ్స్, రెస్టారెంట్లు మరియు ప్రత్యేక డిష్‌లు."},
+      travels:{t:"ప్రయాణాలు", d:"ట్యాక్సీ, కార్ రెంటల్ మరియు బస్ సేవల సమాచారం."},
+      language:{t:"బహుభాషలు", d:"వెబ్సైట్ వివిధ భాషల్లో అందుబాటులో ఉంది."}
+    }
+  },
+
+  ml: {
+    siteTitle: "തമിഴ് നാട് തേടുക",
+    navHome: "ഹോം", navPlaces:"സ്ഥലങ്ങൾ", navLive:"ലൈവ് ഫോട്ടോസ്",
+    heroTitle:"തമിഴ്നാട്ടിലേക്ക് സ്വാഗതം",
+    heroSub:"സ്ഥലങ്ങൾ, ഹോട്ടലുകൾ, ഭക്ഷണം, കാലാവസ്ഥ എന്നിവയ്ക്കുള്ള നിങ്ങളുടെ സമഗ്ര യാത്രാ ഗൈഡ്.",
+    features:{
+      places:{t:"🌍 സ്ഥലങ്ങൾ", d:"ഏതെങ്കിലും ജില്ല തിരഞ്ഞെടുക്കുക, പ്രധാന സ്ഥലങ്ങൾ കാണൂ."},
+      weather:{t:"🌡 തത്സമയ താപനം", d:"യാത്രയ്ക്ക് മുമ്പ് തത്സമയമുളള കാലാവസ്ഥ പരിശോധിക്കുക."},
+      hidden:{t:"🌄 മറഞ്ഞിടങ്ങൾ", d:"കുറച്ച് അന്വേഷിക്കപ്പെട്ടിട്ടുള്ള സ്ഥലങ്ങൾ കണ്ടെത്തുക."},
+      hotels:{t:"🏨 ഹോട്ടലുകൾ", d:"ലക്സുറി, ബജറ്റ് ഹോട്ടൽ വിവരങ്ങൾ."},
+      food:{t:"🍛 ഭക്ഷണശാലകൾ", d:" നല്ല റസ്റ്റോറന്റുകളും പ്രാദേശിക വിഭവങ്ങളും കണ്ടെത്തൂ."},
+      travels:{t:"🛺 യാത്രകൾ", d:"ടാക്സി, ബസ്, വണ്ടി വാടക സേവനങ്ങൾ."}
+    },
+    themeTitle:"വെബ്സൈറ്റ് തീം",
+    info:{
+      district:{t:"ജില്ലാ തെരഞ്ഞെടുപ്പ്", d:"സ്ഥലങ്ങൾ, ഭക്ഷണം, ഹോട്ടലുകൾ എളുപ്പത്തിൽ പരിശോധിക്കാൻ ഒരു ജില്ലാ തിരഞ്ഞെടുക്കൂ."},
+      liveweather:{t:"തത്സമയ കാലാവസ്ഥ", d:"എല്ലാ സ്ഥലങ്ങൾക്കും ഉടൻ താപനമൽ അപ്‌ഡേറ്റുകൾ."},
+      hidden:{t:"മറഞ്ഞിടങ്ങൾ", d:"മറഞ്ഞ ജലപ്രവാഹങ്ങൾ, കുന്നുകളെ കാണിക്കുന്നു."},
+      hotels:{t:"ഹോട്ടലുകൾ", d:"ലക്സുറി ഹോട്ടലുകൾ, റിസോർട്ടുകൾ, ബജറ്റ് മുറികൾ."},
+      food:{t:"ഭക്ഷണം", d:"സ്ട്രീറ്റ് ഫുഡുകൾ, റെസ്റ്റോറന്റുകൾ, പ്രത്യേക വിഭവങ്ങൾ."},
+      travels:{t:"യാത്രകൾ", d:"ടാക്സി, കാർ വാടക, ബസ് സേവനങ്ങൾ."},
+      language:{t:"ബഹുഭാഷ", d:"വെബ്സൈറ്റ് വ്യത്യസ്ത ഭാഷകളിൽ ലഭ്യമാണ്."}
+    }
+  }
+};
+
+/* ====== APPLY LANGUAGE ====== */
+function applyLanguage(code){
+  const L = LANG[code] || LANG.en;
+  // header
+  document.getElementById('siteTitle').innerText = L.siteTitle;
+  document.getElementById('navHome').innerText = L.navHome;
+  document.getElementById('navPlaces').innerText = L.navPlaces;
+  document.getElementById('navLive').innerText = L.navLive;
+
+  // hero
+  document.getElementById('heroTitle').innerText = L.heroTitle;
+  document.getElementById('heroSub').innerText = L.heroSub;
+
+  // features
+  document.querySelectorAll('[data-key]').forEach(card => {
+    const key = card.getAttribute('data-key');
+    const t = card.querySelector('[data-key-title]');
+    const d = card.querySelector('[data-key-desc]');
+    if(L.features[key]){
+      t.innerText = L.features[key].t;
+      d.innerText = L.features[key].d;
+    }
+  });
+
+  // theme heading
+  document.getElementById('themeHeading').innerText = L.themeTitle;
+
+  // info cards
+  Object.keys(L.info).forEach(k=>{
+    const titleEl = document.querySelector(`[data-info-title="${k}"]`);
+    const descEl  = document.querySelector(`[data-info-desc="${k}"]`);
+    if(titleEl) titleEl.innerText = L.info[k].t;
+    if(descEl) descEl.innerText = L.info[k].d;
+  });
+
+  // store preference
+  try{ localStorage.setItem('preferredLang', code); }catch(e){}
+}
+
+/* init: check stored preference */
+(function initLang(){
+  const stored = (localStorage.getItem('preferredLang') || navigator.language || 'en').slice(0,2);
+  const supported = Object.keys(LANG);
+  const code = supported.includes(stored) ? stored : 'en';
+  const sel = document.getElementById('language');
+  sel.value = code;
+  applyLanguage(code);
+})();
+
+/* event */
+document.getElementById('language').addEventListener('change', function(e){
+  applyLanguage(e.target.value);
+});
+
+/* accessibility: keyboard tilt off (press Enter/Space to simulate hover) */
+document.querySelectorAll('.feature-card').forEach(card=>{
+  card.addEventListener('keydown', (ev)=>{
+    if(ev.key === 'Enter' || ev.key === ' '){
+      card.classList.add('hovered');
+      card.querySelector('.shine').style.transform = 'translateX(20%) rotate(6deg)';
+      setTimeout(()=>{ card.classList.remove('hovered'); card.querySelector('.shine').style.transform = ''; }, 900);
+      ev.preventDefault();
+    }
+  })
+});
+</script>
+</body>
+</html>
